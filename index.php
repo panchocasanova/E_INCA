@@ -6,7 +6,7 @@ if(isset($_POST['ingresar'])){
   $password = $_POST['password'];
   $obj = new user();
   $respuesta = $obj->login($rut,$password);
-  //echo $respuesta;
+  echo $respuesta;
 }
 ?>
 <!DOCTYPE html>
