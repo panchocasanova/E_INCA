@@ -144,11 +144,13 @@ if(!empty($_SESSION)){
 									$preguntas = $buscar->preguntas_evaluacion($idPrueba, $y-1);
 									//var_dump($preguntas);
 									if($preguntas <> 0 ){
-										foreach ($preguntas as $pregunta){
+										$a=0;
+										foreach ($preguntas as $pregunta){											
 											$z=1;
+											$a++;
 											$id_pregunta = $pregunta['ID'];
 											echo '<div class="panel panel-info">
-													  <div class="panel-heading"><h4>'.$pregunta['ID'].". ".$pregunta['PREGUNTA'].'</h4></div>
+													  <div class="panel-heading"><h4>'.$a.". ".$pregunta['PREGUNTA'].'</h4></div>
 													  <div class="panel-body">';
 													 $alternativas = $buscar->alternativas_pregunta($id_pregunta); 
 													if($alternativas <> 0){
@@ -159,20 +161,46 @@ if(!empty($_SESSION)){
 															}
 														echo "</ul>";
 													}
-													echo "<p>Seleccione su respuesta:</p>";
-													$respuestas = $buscar->respuestas_pregunta($id_pregunta);
-													//var_dump($respuestas);
-													$b=1;
-													if($respuestas <> 0){
-														foreach($respuestas as $respuesta){
-															?>
-															<ul>
-																<li type="circle"><input type="radio" name="<?php echo $id_pregunta; ?>" value="<?php echo $respuesta['ID_RESPUESTA'];?>"><?php echo $respuesta['RESPUESTA']?></li>
-															</ul>
-															<?php
-															$b++;
+													if($pregunta['VOF'] <> 1){
+														echo "<p><strong>Seleccione su respuesta:</strong></p>";
+														$respuestas = $buscar->respuestas_pregunta($id_pregunta);
+														//var_dump($respuestas);
+														$b=1;
+														if($respuestas <> 0){														
+															foreach($respuestas as $respuesta){
+																//var_dump($respuesta);															
+																	?>																
+																		<label class="radio-inline"><input type="radio" name="preg_<?php echo $id_pregunta; ?>" value="<?php echo $respuesta['ID_RESPUESTA'];?>"><?php echo $respuesta['RESPUESTA']?></label><br>
+																	<?php
+																	$b++;															
+															}
 														}
-													}
+													}else {
+														echo "<p><strong>Seleccione su respuesta:</strong></p>";
+														$respuestas = $buscar->respuestas_pregunta($id_pregunta);
+														//var_dump($respuestas);
+														$b=1;
+														if($respuestas <> 0){														
+															foreach($respuestas as $respuesta){
+																//var_dump($respuesta);															
+																	?>																
+																	<div class="row">
+																	  <div class="col-xs-12 col-sm-6 col-md-8"><?php echo $b.". ".$respuesta['RESPUESTA'];?></div>
+																	  <div class="col-xs-6 col-md-4">
+																		<select class="form-control" name="preg_<?php echo $id_pregunta; ?>">
+																		  <option value="0">&nbsp;</option>
+																		  <option value="V">SI</option>
+																		  <option value ="F">NO</option>
+																		  
+																		</select>
+																	  </div>
+																	</div><br>
+																	<?php
+																	$b++;															
+															}
+														}
+														
+													}	
 													
 											echo '		  </div>
 													</div>';								
