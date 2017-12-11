@@ -72,5 +72,44 @@ class buscador{
 			return 0;
 		}	  
 	}
+	public function preguntas_evaluacion($id_prueba, $item){
+		//busco todas las preguntas de la evaluacion seleccionada por el usuario, indiferente del item al que corresponde.
+		$statment = $this->dbuscador->prepare("SELECT * FROM evaluaciones.pregunta WHERE ID_PRUEBA = ? AND ID_ITEM = ? ");
+		$statment->bindParam(1, $id_prueba);
+		$statment->bindParam(2, $item);
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	public function alternativas_pregunta($id_pregunta){
+		//busco todas las alternativas que corresponden a la pregunta segun el item.
+		$statment = $this->dbuscador->prepare("SELECT * FROM evaluaciones.alternativa WHERE ID_PREGUNTA = ? ");
+		$statment->bindParam(1, $id_pregunta);
+		$statment->execute();
+		if($statment->rowCount() > 0 ){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	public function respuestas_pregunta($id_pregunta){
+		//Busco las respuestas habilitadas para la pregunta realizada.
+		$statment = $this->dbuscador->prepare("SELECT ID_RESPUESTA, RESPUESTA FROM evaluaciones.respuesta_pregunta, evaluaciones.respuesta WHERE respuesta.ID = respuesta_pregunta.ID_RESPUESTA AND ID_PREGUNTA = ?");
+		$statment->bindParam(1, $id_pregunta);
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	
+		
 }
 ?>
