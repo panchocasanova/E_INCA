@@ -46,38 +46,39 @@ if(!empty($_SESSION)){
 	<!-- Custom Theme Style -->
     <link href="build/css/custom.min.css" rel="stylesheet">
 	<!-- jQuery -->
-    <script src="js/jquery.min.js"></script>
+    <script src="js/jquery.min.js"></script>	
 	<!-- jQuery Smart Wizard -->
     <script src="vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
 	<script type="text/javascript">
-    $(document).ready(function(){    	
-    	//  Wizard 
-		$('#wizard').smartWizard({
-			transitionEffect:'slide',
-			onFinish:onFinishCallback
+		$(document).ready(function(){    	
+			//  Wizard 
+			$('#wizard').smartWizard({
+				transitionEffect:'slide',
+				onFinish:onFinishCallback
+			});
+		  
+			function onFinishCallback(){
+				alert('Finalizar evaluacion');
+			}		
+			
+			$(".buttonNext").dblclick(function(event){
+				event.preventDefault();
+			});
+			$(".buttonPrevious").dblclick(function(event){
+				event.preventDefault();
+			});
+			$(".buttonNext").click(function(){
+				$('html, body').animate({scrollTop:0}, 500);
+				return false;
+			});
+			$(".buttonPrevious").click(function(){
+				$('html, body').animate({scrollTop:0}, 500);
+				return false;
+			});
+			
 		});
-	  
-		function onFinishCallback(){
-			alert('Finalizar evaluacion');
-		}		
-		
-		$(".buttonNext").dblclick(function(event){
-			event.preventDefault();
-		});
-		$(".buttonPrevious").dblclick(function(event){
-			event.preventDefault();
-		});
-		$(".buttonNext").click(function(){
-			$('html, body').animate({scrollTop:0}, 500);
-			return false;
-		});
-		$(".buttonPrevious").click(function(){
-			$('html, body').animate({scrollTop:0}, 500);
-			return false;
-		});
-		
-	});
-</script>
+	</script>
+	
   </head>
   <body>
   <div class="container">
@@ -149,7 +150,7 @@ if(!empty($_SESSION)){
 							  </div>
 							  <div class="panel-body">
 								<?php 
-									$preguntas = $buscar->preguntas_evaluacion($idPrueba, $y-1);
+									$preguntas = $buscar->preguntas_evaluacion($idPrueba, $item['ID']);
 									//var_dump($preguntas);
 									if($preguntas <> 0 ){
 										$a=0;
@@ -171,31 +172,33 @@ if(!empty($_SESSION)){
 													}
 													if($pregunta['VOF'] <> 1){
 														echo "<p><strong>Seleccione su respuesta:</strong></p>";
-														$respuestas = $buscar->respuestas_pregunta($id_pregunta);
+														$respuestas1 = $buscar->respuestas_pregunta($id_pregunta);
 														//var_dump($respuestas);
 														$b=1;
-														if($respuestas <> 0){														
-															foreach($respuestas as $respuesta){
+														if($respuestas1 <> 0){
+															echo "<ol type='A'>";
+															foreach($respuestas1 as $respuesta){
 																//var_dump($respuesta);															
 																	?>																
-																		<label class="radio-inline"><input type="radio" name="preg_<?php echo $id_pregunta; ?>" value="<?php echo $respuesta['ID_RESPUESTA'];?>"><?php echo $respuesta['RESPUESTA']?></label><br>
+																		<li><label class="radio-inline"><input type="radio" name="resp_<?php echo $id_pregunta; ?>" value="<?php echo $respuesta['ID_RESPUESTA'];?>"><?php echo $respuesta['RESPUESTA']?></label></li>
 																	<?php
 																	$b++;															
 															}
+															echo "</ol>";
 														}
 													}else {
 														echo "<p><strong>Seleccione su respuesta:</strong></p>";
-														$respuestas = $buscar->respuestas_pregunta($id_pregunta);
+														$respuestas2 = $buscar->respuestas_pregunta($id_pregunta);
 														//var_dump($respuestas);
 														$b=1;
-														if($respuestas <> 0){														
-															foreach($respuestas as $respuesta){
+														if($respuestas2 <> 0){														
+															foreach($respuestas2 as $respuesta){
 																//var_dump($respuesta);															
 																	?>																
 																	<div class="row">
 																	  <div class="col-xs-12 col-sm-6 col-md-8"><?php echo $b.". ".$respuesta['RESPUESTA'];?></div>
 																	  <div class="col-xs-6 col-md-4">
-																		<select class="form-control" name="preg_<?php echo $id_pregunta; ?>">
+																		<select class="form-control" name="resp_<?php echo $respuesta['ID_RESPUESTA']; ?>" id="resp_<?php echo $respuesta['ID_RESPUESTA']; ?>">
 																		  <option value="0">&nbsp;</option>
 																		  <option value="V">SI</option>
 																		  <option value ="F">NO</option>
@@ -211,10 +214,8 @@ if(!empty($_SESSION)){
 													}	
 													
 											echo '		  </div>
-													</div>';								
-											
-											//echo "<p>".$pregunta['ID'].". ".$pregunta['PREGUNTA']."</p><br>";											
-											//var_dump($alternativas);											
+													</div>';							
+																																	
 										}
 									}	
 								?>
@@ -231,6 +232,67 @@ if(!empty($_SESSION)){
     <!-- Bootstrap -->
     <script src="js/bootstrap.min.js"></script>    
     <!-- Custom Theme Scripts -->
-    <script src="build/js/custom.min.js"></script>	
+    <script src="build/js/custom.min.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			<?php
+			//var_dump($items);
+			foreach ($items as $item){
+				//var_dump($preguntas);		
+				$preguntas = $buscar->preguntas_evaluacion($idPrueba, $item['ID']);
+				foreach ($preguntas as $pregunta){
+					$id_pregunta = $pregunta['ID'];
+					if($pregunta['VOF'] <> 1){
+						$respuestas1 = $buscar->respuestas_pregunta($id_pregunta);						
+						//var_dump($respuestas1);
+						?> $("input[name='resp_<?php echo $id_pregunta; ?>']").change(function(){
+								var date = new Date();
+								var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+								//console.log($("input[name='resp_<?php echo $id_pregunta; ?>']:checked").val());
+								var idr = $("input[name='resp_<?php echo $id_pregunta; ?>']:checked").val();
+								$.post("switch.php",{
+									Action:"AP",
+									IdP: <?php echo $id_pregunta; ?>,
+									Rut: '<?php echo $rut; ?>',
+									Idr: idr,
+									Date: now
+									}, function(data){
+									  console.log(data);
+								});
+							}); <?php							
+					}else{
+						$respuestas2 = $buscar->respuestas_pregunta($id_pregunta);
+						//var_dump($respuestas2);
+						foreach($respuestas2 as $respuesta){
+						?> 
+							$("select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]").change(function(){
+								//console.log("ID RESPUESTA: "+ "<?php echo $respuesta['ID_RESPUESTA']; ?>"+" valor:"+ $('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val());
+								var idr = <?php echo $respuesta['ID_RESPUESTA']; ?>;
+								var vr = $('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val();
+								var date = new Date();
+								var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+								$.post("switch.php",{
+									Action:"VFP",
+									IdP: <?php echo $id_pregunta; ?>,
+									Rut: '<?php echo $rut; ?>',
+									Idr: idr,
+									Date: now,
+									Vr: vr
+									}, function(data){
+									  console.log(data);
+								});
+							});  
+							
+							<?php
+						}	
+					}	
+				}							
+			}	
+
+			?>
+		});
+	</script>
+	
+	
   </body>
 </html>
