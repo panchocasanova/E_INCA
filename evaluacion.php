@@ -67,6 +67,14 @@ if(!empty($_SESSION)){
 		$(".buttonPrevious").dblclick(function(event){
 			event.preventDefault();
 		});
+		$(".buttonNext").click(function(){
+			$('html, body').animate({scrollTop:0}, 500);
+			return false;
+		});
+		$(".buttonPrevious").click(function(){
+			$('html, body').animate({scrollTop:0}, 500);
+			return false;
+		});
 		
 	});
 </script>
@@ -110,7 +118,7 @@ if(!empty($_SESSION)){
                                                
                       </ul>
                       <div id="step-1">
-						<h2 class="StepTitle">INSTRUCICONES</h2>
+						<h2 class="StepTitle">INSTRUCCIONES</h2>
 							<div class="panel panel-default">
 							  <div class="panel-body">
 								<p align="justify"><?php echo $descPrueba;?></p>
@@ -118,7 +126,7 @@ if(!empty($_SESSION)){
 								<p><b>PUNTAJE MAXIMO:</b> <?php echo $puntajeMaximo; ?> puntos.</p>				
 							  </div>
 							</div>
-							<div class="panel panel-default">
+							<div class="panel panel-success">
 							  <div class="panel-heading"><b>INSTRUCCIONES</b></div>
 							  <div class="panel-body">
 								<ul>

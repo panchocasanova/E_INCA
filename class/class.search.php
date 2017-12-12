@@ -74,7 +74,7 @@ class buscador{
 	}
 	public function preguntas_evaluacion($id_prueba, $item){
 		//busco todas las preguntas de la evaluacion seleccionada por el usuario, indiferente del item al que corresponde.
-		$statment = $this->dbuscador->prepare("SELECT * FROM evaluaciones.pregunta WHERE ID_PRUEBA = ? AND ID_ITEM = ? ");
+		$statment = $this->dbuscador->prepare("SELECT * FROM evaluaciones.pregunta WHERE ID_PRUEBA = ? AND ID_ITEM = ? ORDER BY RAND()");
 		$statment->bindParam(1, $id_prueba);
 		$statment->bindParam(2, $item);
 		$statment->execute();
