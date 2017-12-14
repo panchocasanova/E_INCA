@@ -1,5 +1,6 @@
 <?php 
 include $_SERVER["DOCUMENT_ROOT"]."../config/connection.php";
+//include $_SERVER["DOCUMENT_ROOT"]."/evaluacion/config/connection.php";
 class buscador{
 	private $dbuscador;
 	public function buscador(){
@@ -14,16 +15,18 @@ class buscador{
 		  $statment->execute();
 		  if($statment->rowCount () > 0){
 			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			//var_dump($datos);
 				foreach ($datos as $dato){
 					$id_prueba = $dato['ID_PRUEBA'];
-					$statment2 = $this->dbuscador->prepare("SELECT NOMBRE_PRUEBA FROM evaluaciones.prueba WHERE ID = ? ");
+					$statment2 = $this->dbuscador->prepare("SELECT ID, NOMBRE_PRUEBA FROM evaluaciones.prueba WHERE ID = ? ");
 					$statment2->bindParam(1, $id_prueba);
 					$statment2->execute();
 					if($statment2->rowCount() > 0){
-						$nombres[] = $statment2->fetch(PDO::FETCH_ASSOC);
+						$nombres[] = $statment2->fetchAll(PDO::FETCH_ASSOC);
 					}
 				}
-			return $nombres;
+				//var_dump($nombres);
+				return $nombres;		
 		  }else{
 			  return 0;
 		  }
@@ -43,7 +46,7 @@ class buscador{
 			$_SESSION['evaluacionActual'] = $datos;		  
 			return $datos;
 		}else{
-		return 0;
+			return 0;
 		}	  
 	}
 	
@@ -109,7 +112,7 @@ class buscador{
 			return 0;
 		}
 	}
-	
+		
 		
 }
 ?>

@@ -1,8 +1,14 @@
 <?php
+//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php");
+//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.functions.php");
 include_once ("/class/class.search.php");
 include_once ("/class/class.functions.php");
+ini_set("session.cookie_lifetime","7200");
 session_start(); 
-if(!empty($_SESSION)){
+
+//var_dump($_SESSION);
+if(!empty($_SESSION) || !isset($_SESSION)){
+	$_SESSION["time"] = time();
 	//var_dump($_SESSION);
 	$rut = $_SESSION['userRut'];
 	$nombre= $_SESSION['userName'];
@@ -10,6 +16,7 @@ if(!empty($_SESSION)){
 	$materno = $_SESSION['userMaterno'];
 	$nombre_completo = $nombre ." ".$paterno." ".$materno;
 	$evaluaciones = $_SESSION['evaluacionActual'];
+	//var_dump($evaluaciones);
 	foreach($evaluaciones as $evaluacion){
 		//var_dump($evaluacion['NOMBRE_PRUEBA']);
 		$idPrueba = $evaluacion['ID'];
@@ -26,9 +33,16 @@ if(!empty($_SESSION)){
 	$x=2;
 	$y=2;
 	//echo integerToRoman(2910);
+	if (time() - $_SESSION["time"] >= 7200)  {
+		echo "Se acabo el tiempo";
+		//lo enviamos a la nota que obtuvo por tiempo, segun lo respondido.	
+		header("Location:nota.php");
+	}
 }else{
 	header("Location:index.php");
 }
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,35 +63,6 @@ if(!empty($_SESSION)){
     <script src="js/jquery.min.js"></script>	
 	<!-- jQuery Smart Wizard -->
     <script src="vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function(){    	
-			//  Wizard 
-			$('#wizard').smartWizard({
-				transitionEffect:'slide',
-				onFinish:onFinishCallback
-			});
-		  
-			function onFinishCallback(){
-				alert('Finalizar evaluacion');
-			}		
-			
-			$(".buttonNext").dblclick(function(event){
-				event.preventDefault();
-			});
-			$(".buttonPrevious").dblclick(function(event){
-				event.preventDefault();
-			});
-			$(".buttonNext").click(function(){
-				$('html, body').animate({scrollTop:0}, 500);
-				return false;
-			});
-			$(".buttonPrevious").click(function(){
-				$('html, body').animate({scrollTop:0}, 500);
-				return false;
-			});
-			
-		});
-	</script>
 	
   </head>
   <body>
@@ -131,9 +116,12 @@ if(!empty($_SESSION)){
 							  <div class="panel-heading"><b>INSTRUCCIONES</b></div>
 							  <div class="panel-body">
 								<ul>
-								<?php foreach ($instrucciones as $instruccion){?>
+								<?php 
+								if($instrucciones <> 0){
+								foreach ($instrucciones as $instruccion){?>
 									<li><p align="justify"><?php echo $instruccion['DESCRIPCION']; ?></p>				
-								<?php } ?>
+								<?php } 
+								} ?>
 								</ul>
 							  </div>
 							</div>
@@ -161,7 +149,9 @@ if(!empty($_SESSION)){
 											echo '<div class="panel panel-info">
 													  <div class="panel-heading"><h4>'.$a.". ".$pregunta['PREGUNTA'].'</h4></div>
 													  <div class="panel-body">';
-													 $alternativas = $buscar->alternativas_pregunta($id_pregunta); 
+													 $alternativas = $buscar->alternativas_pregunta($id_pregunta);
+													 //var_dump($alternativas);
+													 
 													if($alternativas <> 0){
 														echo "<ul class='list-group'>";
 															foreach ($alternativas as $alternativa){
@@ -228,7 +218,27 @@ if(!empty($_SESSION)){
                     <!-- End SmartWizard Content -->		
 		</div>
 	</div>
-  </div>  
+  </div>
+<!-- Modal Termino evaluacion-->
+<div class="modal fade" tabindex="-1" role="dialog" id="fin">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content alert alert-info">
+      <div class="modal-header">        
+        <h4 class="modal-title">Finalizar Evaluaci&oacute;n</h4>
+      </div>
+      <div class="modal-body">
+        <p>Estimado(a) <?php echo $nombre_completo; ?>, ¿Está seguro(a) que desea finalizar esta evaluación?. </p>
+		<p>Le recordamos que no podrá acceder a esta secci&oacute;n nuevamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal" >Me arrenpent&iacute;, revisaré antes.</button>
+        <button type="button" class="btn btn-primary" id="btnFinalizar">Sí, estoy seguro(a).</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal Termino evaluacion-->  
+
     <!-- Bootstrap -->
     <script src="js/bootstrap.min.js"></script>    
     <!-- Custom Theme Scripts -->
@@ -243,7 +253,9 @@ if(!empty($_SESSION)){
 				foreach ($preguntas as $pregunta){
 					$id_pregunta = $pregunta['ID'];
 					if($pregunta['VOF'] <> 1){
-						$respuestas1 = $buscar->respuestas_pregunta($id_pregunta);						
+						$respuestas1 = $buscar->respuestas_pregunta($id_pregunta);
+						//echo $respuesta1;
+						if(!isset($respuestas1) || $respuestas1 <> 0){						
 						//var_dump($respuestas1);
 						?> $("input[name='resp_<?php echo $id_pregunta; ?>']").change(function(){
 								var date = new Date();
@@ -259,42 +271,107 @@ if(!empty($_SESSION)){
 									}, function(data){
 									  console.log(data);
 								});
-							}); <?php							
+							}); <?php	
+						}
+							
 					}else{
 						$respuestas2 = $buscar->respuestas_pregunta($id_pregunta);
-						//var_dump($respuestas2);
-						foreach($respuestas2 as $respuesta){
-						?> 
-							$("select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]").change(function(){
-								//console.log("ID RESPUESTA: "+ "<?php echo $respuesta['ID_RESPUESTA']; ?>"+" valor:"+ $('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val());
-								var idr = <?php echo $respuesta['ID_RESPUESTA']; ?>;
-								var vr = $('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val();
-								var date = new Date();
-								var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
-								if($('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val() != 0){
-									$.post("switch.php",{
-										Action:"VFP",
-										IdP: <?php echo $id_pregunta; ?>,
-										Rut: '<?php echo $rut; ?>',
-										Idr: idr,
-										Date: now,
-										Vr: vr
-										}, function(data){
-										  console.log(data);
-									});
-								}
-							});  
-							
-							<?php
-						}	
+						//print_r($respuestas2);
+						if(!isset($respuestas2) || $respuestas2 <> 0){
+							foreach($respuestas2 as $respuesta){
+							?> 
+								$("select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]").change(function(){
+									//console.log("ID RESPUESTA: "+ "<?php echo $respuesta['ID_RESPUESTA']; ?>"+" valor:"+ $('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val());
+									var idr = <?php echo $respuesta['ID_RESPUESTA']; ?>;
+									var vr = $('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val();
+									var date = new Date();
+									var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+									if($('select[name=resp_<?php echo $respuesta['ID_RESPUESTA']; ?>]').val() != 0){
+										$.post("switch.php",{
+											Action:"VFP",
+											IdP: <?php echo $id_pregunta; ?>,
+											Rut: '<?php echo $rut; ?>',
+											Idr: idr,
+											Date: now,
+											Vr: vr
+											}, function(data){
+											  console.log(data);
+										});
+									}
+								});  
+								
+								<?php
+							}
+						}		
 					}	
 				}							
-			}	
-
-			?>
+			}?>
+			//  Wizard 
+			$('#wizard').smartWizard({
+				transitionEffect:'slide',
+				onFinish:onFinishCallback
+			});
+			function onFinishCallback(){
+				//alert('Finalizar evaluacion');
+				$("#fin").modal({
+				  backdrop:'static',
+				  keyboard: false
+				});
+			}
+					
+			
+			$(".buttonNext").dblclick(function(event){
+				event.preventDefault();
+			});
+			$(".buttonPrevious").dblclick(function(event){
+				event.preventDefault();
+			});
+			var timeNext1 = 0;
+			$(".buttonNext").click(function(){
+				if(timeNext1 == 0){
+					var date = new Date();
+					var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+					$.post("switch.php",{
+						Action: "TIEMPOINICIO",
+						Rut: '<?php echo $rut; ?>',
+						IdP: <?php echo $idPrueba;?>,
+						Hora: now						
+						}, function(data){
+						  if(data != 'OK'){
+							  console.log(data);
+						  }else{
+							  timeNext1 = 1;
+						  }					  
+					});
+				}
+				
+				$('html, body').animate({scrollTop:0}, 500);
+				//return false;
+			});
+			$(".buttonPrevious").click(function(){
+				$('html, body').animate({scrollTop:0}, 500);
+				return false;
+			});
+			$("#btnFinalizar").click(function(){
+				var date = new Date();
+				var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+				//guardar puntaje.
+				//console.log(now);
+				$.post("switch.php",{
+					Action: "FINALIZAR",
+					Rut: '<?php echo $rut; ?>',
+					IdP: <?php echo $idPrueba;?>,
+					Hora: now,
+					Pmax: <?php echo $puntajeMaximo;?>,
+					Nexi: <?php echo $nivelPrueba;?>
+					}, function(data){
+					  //console.log(data);
+					  if(data == 'OK'){
+						  window.location.href = "nota.php";
+					  }		  
+				});				
+			});
 		});
 	</script>
-	
-	
   </body>
 </html>

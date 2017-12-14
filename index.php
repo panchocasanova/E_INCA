@@ -1,4 +1,5 @@
 <?php include_once ("/class/class.user.php");
+//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.user.php")
 session_start();
 session_destroy();
 if(isset($_POST['ingresar'])){
@@ -19,6 +20,7 @@ if(isset($_POST['ingresar'])){
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Instituto de Neurocirugia</title>
+	<link rel="shortcut icon" href="/img/logo.ico" type="image/x-icon" />
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -27,8 +29,7 @@ if(isset($_POST['ingresar'])){
     <!-- NProgress -->
     <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
     <!-- Animate.css -->
-    <link href="vendors/animate.css/animate.min.css" rel="stylesheet">
-    
+    <link href="vendors/animate.css/animate.min.css" rel="stylesheet">    
   </head>
   <body>
 	<div class="container">
@@ -64,8 +65,7 @@ if(isset($_POST['ingresar'])){
 				<?php } ?>
 			</div>
 		</div>
-	</div>
-  
+	</div>  
 	<!-- jQuery -->
     <script src="vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
