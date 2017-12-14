@@ -1,5 +1,5 @@
-<?php include_once ("/class/class.user.php");
-//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.user.php")
+<?php //include_once ("/class/class.user.php");
+include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.user.php");
 session_start();
 session_destroy();
 if(isset($_POST['ingresar'])){

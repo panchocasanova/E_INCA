@@ -1,6 +1,6 @@
 <?php
-include_once ("/class/class.search.php"); 
-//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php"); 
+//include_once ("/class/class.search.php"); 
+include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php"); 
 session_start();
 if(empty($_SESSION)){
 	header("Location:index.php");

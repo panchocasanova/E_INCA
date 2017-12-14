@@ -1,8 +1,8 @@
 <?php
-//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php");
-//include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.functions.php");
-include_once ("/class/class.search.php");
-include_once ("/class/class.functions.php");
+include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php");
+include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.functions.php");
+//include_once ("/class/class.search.php");
+//include_once ("/class/class.functions.php");
 ini_set("session.cookie_lifetime","7200");
 session_start(); 
 

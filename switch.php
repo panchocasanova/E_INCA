@@ -1,5 +1,5 @@
 <?php
-include $_SERVER["DOCUMENT_ROOT"]."../config/connection.php";
+include $_SERVER["DOCUMENT_ROOT"]."/evaluacion/config/connection.php";
 session_start();
 include_once("/class/class.crud.php"); 
 include_once("/class/class.calcular.php");

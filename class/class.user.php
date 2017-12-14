@@ -1,5 +1,5 @@
 <?php
-include $_SERVER["DOCUMENT_ROOT"]."../config/connection.php";
+include $_SERVER["DOCUMENT_ROOT"]."/evaluacion/config/connection.php";
 class user{
   private $db;
   public function user(){
