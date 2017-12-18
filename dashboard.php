@@ -7,7 +7,7 @@ if(!empty($_SESSION)){
 	include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php");
 	$buscar = new buscador();
 	$pruebas = $buscar->evaluaciones();
-	var_dump($pruebas);
+	//var_dump($pruebas);
 }else{
 	header("Location: administrador.php");
 }
@@ -161,12 +161,12 @@ if(!empty($_SESSION)){
 					  <table id="tablaPruebas" class="table table-striped table-bordered">
                       <thead>
                         <tr>
-                          <th>ID</th>
-                          <th>NOMBRE EVALUACION</th>
-                          <th>FECHA INICIO</th>
-                          <th>FECHA TERMINO</th>
-                          <th>CANTIDAD DE ALUMNOS</th>
-                          <th>COMPLETADAS</th>
+                          <th>Id</th>
+                          <th>Nombre Evaluaci&oacute;n</th>
+                          <th>Fecha Inicio</th>
+                          <th>Fecha Termino</th>
+                          <th>Cantidad Alumnos</th>
+                          <th>Completadas</th>
                         </tr>
                       </thead>
 					  <tbody>
@@ -187,19 +187,17 @@ if(!empty($_SESSION)){
 							$fechaTermino = $terminoFecha[2]."-".$terminoFecha[1]."-".$terminoFecha[0];
 							$horaTermino = $terminoFormat[1];
 							$termino = $horaTermino." ".$fechaTermino;
-						}?>
-						<tr>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-							<td></td>
-						</tr>
-						</table>
-						
-					  </body>
-					  
+							echo "<tr>";
+							echo "<td>".$idPrueba."</td>";
+							echo "<td>".$nombrePrueba."</td>";
+							echo "<td>".$inicio."</td>";
+							echo "<td>".$termino."</td>";
+							echo "<td>0</td>";
+							echo "<td>0</td>";
+							echo "</tr>";							
+						}?>						
+						</table>						
+					  </body>					  
                   </div>
                 </div>
               </div>
