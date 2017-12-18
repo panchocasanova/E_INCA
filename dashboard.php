@@ -171,7 +171,7 @@ if(!empty($_SESSION)){
                       </thead>
 					  <tbody>
 					  <?php foreach ($pruebas as $prueba){
-							$idPrueba = $prueba['ID'];
+							$idPrueba = $prueba['ID'];							
 							$nombrePrueba = $prueba['NOMBRE_PRUEBA'];
 							$exigenciaPrueba = $prueba['EXIGENCIA'];
 							$puntajePrueba = $prueba['PUNTAJE_MAXIMO'];

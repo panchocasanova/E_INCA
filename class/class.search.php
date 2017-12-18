@@ -122,6 +122,18 @@ class buscador{
 			return 0;
 		}
 	}
+	public function userAll($idPrueba){
+		//busca a tdos los usuarios registrados que pueden dar la prueba. 
+		$statment = $this->dbuscador->prepare("SELECT count(*) FROM evaluaciones.usuario_prueba WHERE ID_PRUEBA = ?");
+		$statment->bindParam(1,$idPrueba);
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
 	
 		
 		
