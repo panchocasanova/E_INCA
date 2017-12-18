@@ -112,6 +112,17 @@ class buscador{
 			return 0;
 		}
 	}
+	public function evaluaciones(){
+		$statment = $this->dbuscador->prepare("SELECT * FROM evaluaciones.prueba");
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	
 		
 		
 }

@@ -30,5 +30,21 @@ class user{
     }
     return $mensaje;
   }
+  public function login_admin($rut, $pass){
+	  if(!empty($rut) && !empty($pass)){
+		  $statment = $this->db->prepare("SELECT * FROM administrador WHERE administrador.RUT = ? AND administrador.PASSWORD = ? ");
+		  $statment->bindParam(1, $rut);
+		  $statment->bindParam(2, $pass);
+		  $statment->execute();
+		  if($statment->rowCount() == 1){
+			  $datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			  return $datos;
+		  }else{
+			  return 0;
+		  }
+	  }else{
+		  return 0;
+	  }
+  }
 }
 ?>
