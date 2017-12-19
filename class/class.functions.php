@@ -33,5 +33,68 @@ function integerToRoman($integer){
 	// The Roman numeral should be built, return it
 	return $result;
 }
+function porcentaje($total, $cantidad){
+	$porcentaje = ($cantidad*100)/$total;
+	if($porcentaje == 0){
+		return 0;
+	}else{
+		return number_format($porcentaje,1,",",".");
+	}	
+}
+function meses($mes){
+    switch ($mes) {      
+        case '01':
+          # code...
+          return 'ENERO';
+          break;
+        case '02':
+          # code...
+          return 'FEB';
+          break;
+        case '03':
+          # code...
+          return 'MARZO';
+          break;
+        case '04':
+          # code...
+          return 'ABRIL';
+          break;
+        case '05':
+          # code...
+          return 'MAY';
+          break;
+        case '06':
+          # code...
+          return 'JUN';
+          break;
+        case '07':
+          # code...
+          return 'JUL';
+          break;
+        case '08':
+          # code...
+          return 'AGOS';
+          break;
+        case '09':
+          # code...
+          return 'SEPT';
+          break;
+        case '10':
+          # code...
+          return 'OCT';
+          break;
+        case '11':
+          # code...
+          return 'NOV';
+          break;
+        case '12':
+          # code...
+          return 'DIC';
+          break;                 
+      default:
+        # code...
+        break;
+    }
+  }
 
 ?>

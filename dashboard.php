@@ -5,6 +5,7 @@ if(!empty($_SESSION)){
 	$nombre = $_SESSION['nombreCompleto'];
 	$rut = $_SESSION['rut'];
 	include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php");
+	include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.functions.php");
 	$buscar = new buscador();
 	$pruebas = $buscar->evaluaciones();
 	//var_dump($pruebas);
@@ -162,11 +163,12 @@ if(!empty($_SESSION)){
                       <thead>
                         <tr>
                           <th>Id</th>
-                          <th>Nombre Evaluaci&oacute;n</th>
-                          <th>Fecha Inicio</th>
-                          <th>Fecha Termino</th>
-                          <th>Cantidad Alumnos</th>
-                          <th>Completadas</th>
+                          <th data-toggle="tooltip" data-placement="top" title="Indica nombre de identificaci&oacute;n de la evaluaci&oacute;n">Nombre Evaluaci&oacute;n</th>
+                          <th data-toggle="tooltip" data-placement="top" title="Indica fecha y hora en la cual comenzar&aacute; a ser vista la evaluaci&oacute;n">Fecha Inicio</th>
+                          <th data-toggle="tooltip" data-placement="top" title="Indica fecha y hora en la cual dejar&aacute; de ser vista la evaluaci&oacute;n por los evaluados.">Fecha Termino</th>
+                          <th data-toggle="tooltip" data-placement="top" title="Indica la cantidad total de alumnos habilitados para dar la evaluaci&oacute;n">Total Alumnos</th>
+                          <th data-toggle="tooltip" data-placement="top" title="Indica el total de evaluaciones terminadas por los evaluados.">Completadas</th>
+						  <th data-toggle="tooltip" data-placement="top" title="Indica el procentaje total de alumnos que han completado la evaluaci&oacute;n">%</th>
                         </tr>
                       </thead>
 					  <tbody>
@@ -180,20 +182,27 @@ if(!empty($_SESSION)){
 							$inicioFecha = explode("-", $inicioFormat[0]);
 							$fechaInicio = $inicioFecha[2]."-".$inicioFecha[1]."-".$inicioFecha[0];
 							$horaInicio = $inicioFormat[1];
-							$inicio = $horaInicio." ".$fechaInicio;
+							$inicio = $horaInicio." ".$fechaInicio; //SE ordena la fecha para que sea vista por el usuario final de forma correcta. 
 							$terminoPrueba = $prueba['FECHA_TERMINO'];
 							$terminoFormat = explode(" ", $terminoPrueba);
 							$terminoFecha = explode("-", $terminoFormat[0]);
 							$fechaTermino = $terminoFecha[2]."-".$terminoFecha[1]."-".$terminoFecha[0];
 							$horaTermino = $terminoFormat[1];
-							$termino = $horaTermino." ".$fechaTermino;
+							$termino = $horaTermino." ".$fechaTermino; //SE ordena la fecha para que sea vista por el usuario final de forma correcta. 
+							$alumnos = $buscar->userAll($idPrueba);
+							$pruebasTerminadas = $buscar->evaluacionesTerminadas($idPrueba);	
+							//var_dump($alumnos);
+							//var_dump($pruebasTerminadas);
+							
+							$urlGet = base64_encode($idPrueba);
 							echo "<tr>";
 							echo "<td>".$idPrueba."</td>";
-							echo "<td>".$nombrePrueba."</td>";
+							echo "<td> <a href='estadisticas.php?idp=".$urlGet."' id='eva_".$idPrueba."'>".$nombrePrueba."</a></td>";
 							echo "<td>".$inicio."</td>";
 							echo "<td>".$termino."</td>";
-							echo "<td>0</td>";
-							echo "<td>0</td>";
+							echo "<td>".$alumnos['CANTIDAD']."</td>";
+							echo "<td>".$pruebasTerminadas['CANTIDAD']."</td>";
+							echo "<td>".porcentaje($alumnos['CANTIDAD'],$pruebasTerminadas['CANTIDAD'])."</td>";
 							echo "</tr>";							
 						}?>						
 						</table>						
@@ -251,6 +260,7 @@ if(!empty($_SESSION)){
                 "url": "vendors/datatables.net/js/datatables.spanish.lang"
             }
         } );
+		
     } );
 </script>
   </body>

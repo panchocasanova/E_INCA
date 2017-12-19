@@ -34,7 +34,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 	$y=2;
 	//echo integerToRoman(2910);
 	if (time() - $_SESSION["time"] >= 7200)  {
-		echo "Se acabo el tiempo";
+		//echo "Se acabo el tiempo";
 		//lo enviamos a la nota que obtuvo por tiempo, segun lo respondido.	
 		header("Location:nota.php");
 	}
@@ -63,6 +63,8 @@ if(!empty($_SESSION) || !isset($_SESSION)){
     <script src="js/jquery.min.js"></script>	
 	<!-- jQuery Smart Wizard -->
     <script src="vendors/jQuery-Smart-Wizard/js/jquery.smartWizard.js"></script>
+	<!--Moment-->
+	<script src="vendors/moment/moment.js"></script>
 	
   </head>
   <body>
@@ -237,7 +239,25 @@ if(!empty($_SESSION) || !isset($_SESSION)){
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!-- Modal Termino evaluacion-->  
+<!-- Modal Termino evaluacion--> 
+<!-- Modal poco tiempo-->
+<div class="modal fade" tabindex="-1" role="dialog" id="avisoFin">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content alert alert-danger">
+      <div class="modal-header">        
+        <h4 class="modal-title">Falta poco tiempo</h4>
+      </div>
+      <div class="modal-body">
+        <p>Estimado(a) <?php echo $nombre_completo; ?>, le quedan 5 minutos para finalizar la evaluaci&oacute;n</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal" >Ok, no me ponga nervioso.</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal poco tiempo-->  
 
     <!-- Bootstrap -->
     <script src="js/bootstrap.min.js"></script>    
@@ -327,15 +347,20 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 				event.preventDefault();
 			});
 			var timeNext1 = 0;
+			var date = new Date();
+			var nowInicio;
+			var horaInicio;
 			$(".buttonNext").click(function(){
 				if(timeNext1 == 0){
-					var date = new Date();
-					var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+									
+					horaInicio = moment(date.getHours()+":"+date.getMinutes(),'HH:mm');
+					
+					nowInicio = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 					$.post("switch.php",{
 						Action: "TIEMPOINICIO",
 						Rut: '<?php echo $rut; ?>',
 						IdP: <?php echo $idPrueba;?>,
-						Hora: now						
+						Hora: nowInicio						
 						}, function(data){
 						  if(data != 'OK'){
 							  console.log(data);
@@ -352,16 +377,16 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 				$('html, body').animate({scrollTop:0}, 500);
 				return false;
 			});
-			$("#btnFinalizar").click(function(){
-				var date = new Date();
-				var now = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+			var nowFin;
+			$("#btnFinalizar").click(function(){				
+				nowFin = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 				//guardar puntaje.
 				//console.log(now);
 				$.post("switch.php",{
 					Action: "FINALIZAR",
 					Rut: '<?php echo $rut; ?>',
 					IdP: <?php echo $idPrueba;?>,
-					Hora: now,
+					Hora: nowFin,
 					Pmax: <?php echo $puntajeMaximo;?>,
 					Nexi: <?php echo $nivelPrueba;?>
 					}, function(data){
@@ -371,6 +396,43 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 					  }		  
 				});				
 			});
+			
+			
+				setInterval(function(){
+					if(timeNext1 == 1){
+						var fecha = new Date();	
+						var ahora = moment(fecha.getHours()+":"+fecha.getMinutes(),'HH:mm');
+						var diff = 	moment.duration(ahora - horaInicio).minutes();
+						console.log(diff);
+						// cuando falten 5 minutos para el termino de la evaluacion, le mandamos una alerta. 
+						if(diff == 1){
+							$("#avisoFin").modal({
+							  backdrop:'static',
+							  keyboard: false
+							});
+						}
+						
+						/*
+						
+						$.post("switch.php",{
+							Action: "FINALIZAR",
+							Rut: '<?php echo $rut; ?>',
+							IdP: <?php echo $idPrueba;?>,
+							Hora: nowFin,
+							Pmax: <?php echo $puntajeMaximo;?>,
+							Nexi: <?php echo $nivelPrueba;?>
+							}, function(data){
+							  //console.log(data);
+							  if(data == 'OK'){
+								  window.location.href = "nota.php";
+							  }		  
+						});
+						*/						
+					}
+				}, 3000); // 5 minutos
+				
+
+
 		});
 	</script>
   </body>

@@ -124,8 +124,39 @@ class buscador{
 	}
 	public function userAll($idPrueba){
 		//busca a tdos los usuarios registrados que pueden dar la prueba. 
-		$statment = $this->dbuscador->prepare("SELECT count(*) FROM evaluaciones.usuario_prueba WHERE ID_PRUEBA = ?");
+		$statment = $this->dbuscador->prepare("SELECT count(*) AS CANTIDAD FROM evaluaciones.usuario_prueba WHERE ID_PRUEBA = ?");
 		$statment->bindParam(1,$idPrueba);
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetch(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	public function evaluacionesTerminadas($idPrueba){
+		//Busco todos los almunos que han efectuado la evaluacion a consultar, se determina por el campo nota de la tabla usuario prueba.
+		$statment = $this->dbuscador->prepare("SELECT count(*) as CANTIDAD FROM evaluaciones.usuario_prueba WHERE ID_PRUEBA = ? AND NOTA > ?; ");
+		$statment->bindParam(1,$idPrueba);
+		$statment->bindValue(2,0);
+		$statment->execute();
+		$dato = $statment->fetch(PDO::FETCH_ASSOC);
+		return $dato;		
+	}
+	public function alumnosFaltantes($idPrueba){
+		//Busco todos los alumnos que aun faltan por dar la prueba, el campo a consultar es nota. 
+		$statment = $this->dbuscador->prepare("SELECT count(*) AS CANTIDAD FROM evaluaciones.usuario_prueba WHERE ID_PRUEBA = ? AND NOTA = ?");
+		$statment->bindParam(1, $idPrueba);
+		$statment->bindValue(2,0);
+		$statment->execute();
+		$dato = $statment->fetch(PDO::FETCH_ASSOC);
+		return $dato;
+	}
+	public function listadoTerminadas($idPrueba){
+		//Listado de los alumnos que han terminado la evaluacion. 
+		$statment = $this->dbuscador->prepare("SELECT usuario.RUT, usuario.NOMBRE, usuario.PATERNO, usuario.MATERNO, usuario.CARGO, usuario_prueba.FECHA_INICIO, usuario_prueba.FECHA_TERMINO, usuario_prueba.PUNTAJE, usuario_prueba.NOTA FROM usuario, usuario_prueba WHERE usuario.RUT=usuario_prueba.RUT AND usuario_prueba.ID_PRUEBA = ? AND usuario_prueba.NOTA > ?;");
+		$statment->bindParam(1, $idPrueba);
+		$statment->bindValue(2,0);
 		$statment->execute();
 		if($statment->rowCount() > 0){
 			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
@@ -134,6 +165,7 @@ class buscador{
 			return 0;
 		}
 	}
+	
 	
 		
 		

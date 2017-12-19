@@ -64,11 +64,9 @@ class calculo{
 		}
 	}
 	
-	public function nota($puntajeMaximo, $nivelExigencia, $puntajeObtenido){
-		
+	public function nota($puntajeMaximo, $nivelExigencia, $puntajeObtenido){		
 		$nivel = $nivelExigencia/100;
-		$puntajeMinimoAprobacion = $puntajeMaximo * $nivel;
-		
+		$puntajeMinimoAprobacion = $puntajeMaximo * $nivel;		
 		if($puntajeObtenido > $puntajeMinimoAprobacion){
 			$notaFinal = (((7.0-4.0)/($puntajeMaximo-$puntajeMinimoAprobacion))*($puntajeObtenido-$puntajeMinimoAprobacion))+4.0;
 		}
