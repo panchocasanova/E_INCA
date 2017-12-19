@@ -241,7 +241,25 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 </div><!-- /.modal -->
 <!-- Modal Termino evaluacion--> 
 <!-- Modal poco tiempo-->
-<div class="modal fade" tabindex="-1" role="dialog" id="avisoFin">
+<div class="modal fade" tabindex="-1" role="dialog" id="avisoFin20">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content alert alert-danger">
+      <div class="modal-header">        
+        <h4 class="modal-title">Falta poco tiempo</h4>
+      </div>
+      <div class="modal-body">
+        <p>Estimado(a) <?php echo $nombre_completo; ?>, le quedan 20 minutos para finalizar la evaluaci&oacute;n</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" data-dismiss="modal" >Ok, no me ponga nervioso.</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal poco tiempo--> 
+<!-- Modal poco tiempo-->
+<div class="modal fade" tabindex="-1" role="dialog" id="avisoFin5">
   <div class="modal-dialog" role="document">
     <div class="modal-content alert alert-danger">
       <div class="modal-header">        
@@ -404,30 +422,38 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 						var ahora = moment(fecha.getHours()+":"+fecha.getMinutes(),'HH:mm');
 						var diff = 	moment.duration(ahora - horaInicio).minutes();
 						console.log(diff);
-						// cuando falten 5 minutos para el termino de la evaluacion, le mandamos una alerta. 
-						if(diff == 1){
-							$("#avisoFin").modal({
+						// cuando falten 20 minutos para el termino de la evaluacion, le mandamos una alerta. 
+						if(diff == 100){
+							$("#avisoFin20").modal({
+							  backdrop:'static',
+							  keyboard: false
+							});
+						}
+						// cuando falten 5 minutos para el termino de la evaluacion, le mandamos una alerta.
+						if(diff == 115){
+							$("#avisoFin5").modal({
 							  backdrop:'static',
 							  keyboard: false
 							});
 						}
 						
-						/*
 						
-						$.post("switch.php",{
-							Action: "FINALIZAR",
-							Rut: '<?php echo $rut; ?>',
-							IdP: <?php echo $idPrueba;?>,
-							Hora: nowFin,
-							Pmax: <?php echo $puntajeMaximo;?>,
-							Nexi: <?php echo $nivelPrueba;?>
-							}, function(data){
-							  //console.log(data);
-							  if(data == 'OK'){
-								  window.location.href = "nota.php";
-							  }		  
-						});
-						*/						
+						if(diff == 120){
+							$.post("switch.php",{
+								Action: "FINALIZAR",
+								Rut: '<?php echo $rut; ?>',
+								IdP: <?php echo $idPrueba;?>,
+								Hora: nowFin,
+								Pmax: <?php echo $puntajeMaximo;?>,
+								Nexi: <?php echo $nivelPrueba;?>
+								}, function(data){
+								  //console.log(data);
+								  if(data == 'OK'){
+									  window.location.href = "nota.php";
+								  }		  
+							});
+						}	
+												
 					}
 				}, 3000); // 5 minutos
 				
