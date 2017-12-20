@@ -8,6 +8,7 @@ session_start();
 
 //var_dump($_SESSION);
 if(!empty($_SESSION) || !isset($_SESSION)){
+	
 	$_SESSION["time"] = time();
 	//var_dump($_SESSION);
 	$rut = $_SESSION['userRut'];
@@ -23,8 +24,17 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 		$nombrePrueba = $evaluacion['NOMBRE_PRUEBA'];
 		$puntajeMaximo = $evaluacion['PUNTAJE_MAXIMO'];
 		$nivelPrueba = $evaluacion['EXIGENCIA'];
-		$descPrueba = $evaluacion['DESCRIPCION'];	
+		$descPrueba = $evaluacion['DESCRIPCION'];
+		$fechaInicio = $evaluacion['FECHA_INICIO'];
+		$fechaTermino = $evaluacion['FECHA_TERMINO'];		
 	}
+	$hoy = strtotime(date('Y-m-d H:i:s'));
+	//$fechaPrueba = strtotime(date('2017-12-20 13:10:59'));
+	$interval1 = strtotime($fechaInicio) - $hoy;
+	$interval2 = strtotime($fechaTermino)- $hoy;
+	//$interval1 = $fechaPrueba - $hoy;
+	//$interval2 = $fechaPrueba - $hoy;
+	//echo "Faltan: ".$interval1." Expira: ".$interval2;
 	$buscar = new buscador();
 	$items = $buscar->items_evaluacion($idPrueba);
 	//var_dump($items);
@@ -53,6 +63,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Instituto de Neurocirugia</title>
+	<link rel="shortcut icon" href="img/logo.ico" type="image/x-icon" />
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -275,7 +286,43 @@ if(!empty($_SESSION) || !isset($_SESSION)){
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-<!-- Modal poco tiempo-->  
+<!-- Modal poco tiempo--> 
+<!-- Modal no habilitada-->
+<div class="modal fade" tabindex="-1" role="dialog" id="nohabilitada">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content alert alert-warning">
+      <div class="modal-header">        
+        <h4 class="modal-title">MENSAJE</h4>
+      </div>
+      <div class="modal-body">
+        <p>Estimado(a) <?php echo $nombre_completo; ?>, Esta evaluaci&oacute;n aun no comienza. Consulte con el encargado la fecha y hora de inicio y termino de esta.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" id="mastarde" >OK, vuelvo mas tarde.</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal no habilitada-->
+<!-- Modal expirada-->
+<div class="modal fade" tabindex="-1" role="dialog" id="expirada">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content alert alert-info">
+      <div class="modal-header">        
+        <h4 class="modal-title">MENSAJE</h4>
+      </div>
+      <div class="modal-body">
+        <p>Estimado(a) <?php echo $nombre_completo; ?>, Esta evaluaci&oacute;n ya no esta disponible en el sistema. si tiene alguna duda, favor comuniquese con el encargado.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-warning" id="btnexpirada" >Salir</button>
+        
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- Modal expirada-->   
 
     <!-- Bootstrap -->
     <script src="js/bootstrap.min.js"></script>    
@@ -415,30 +462,38 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 				});				
 			});
 			
-			
+			var contador=0;
+			var a=0;
 				setInterval(function(){
-					if(timeNext1 == 1){
+					if(timeNext1 == 1){						
 						var fecha = new Date();	
 						var ahora = moment(fecha.getHours()+":"+fecha.getMinutes(),'HH:mm');
+						<?php // diff, muestra el minuto actual.?>
 						var diff = 	moment.duration(ahora - horaInicio).minutes();
-						console.log(diff);
-						// cuando falten 20 minutos para el termino de la evaluacion, le mandamos una alerta. 
-						if(diff == 100){
+						<?php /*creo un contador para que vaya sumando cada minuto 
+							se logra esto realizando comparacion de variables, cada vez que cambie "diff" (variable que indica el minuto actual, se compara con la variabla "a"(que es una variable de comparacion), si son diferentes, sumo 1 a la variable "contador".
+						*/?>
+						//console.log("diff: "+diff+" a:"+a);
+						if(diff != a){
+							a = diff;
+							contador++;
+							//console.log(contador);
+						}
+						<?php // cuando falten 20 minutos para el termino de la evaluacion, le mandamos una alerta. ?>		
+						if(contador == 100){
 							$("#avisoFin20").modal({
 							  backdrop:'static',
 							  keyboard: false
 							});
 						}
-						// cuando falten 5 minutos para el termino de la evaluacion, le mandamos una alerta.
-						if(diff == 115){
+						<?php // cuando falten 5 minutos para el termino de la evaluacion, le mandamos una alerta. ?>
+						if(contador == 115){
 							$("#avisoFin5").modal({
 							  backdrop:'static',
 							  keyboard: false
 							});
-						}
-						
-						
-						if(diff == 120){
+						}					
+						if(contador == 120){
 							$.post("switch.php",{
 								Action: "FINALIZAR",
 								Rut: '<?php echo $rut; ?>',
@@ -452,14 +507,35 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 									  window.location.href = "nota.php";
 								  }		  
 							});
-						}	
-												
+						}												
 					}
-				}, 3000); // 5 minutos
+				}, 3000); <?php // cada 3 segundo se ira verificando el tiempo. ?>
 				
-
+				
+				var noHabilitada = <?php echo $interval1; ?>;
+				var expira = <?php echo $interval2; ?>;
+				
+				if(noHabilitada > 0 ){
+					$("#nohabilitada").modal({
+					  backdrop:'static',
+					  keyboard: false
+					});
+				}
+				if(expira <= 0){
+					$("#expirada").modal({
+					  backdrop:'static',
+					  keyboard: false
+					});
+				}
+				$("#mastarde").click(function(){
+					window.location.href="index.php";
+				});
+				$("#expirada").click(function(){
+					window.location.href="index.php";
+				});		
 
 		});
+		
 	</script>
   </body>
 </html>

@@ -1,8 +1,8 @@
 <?php
 include $_SERVER["DOCUMENT_ROOT"]."/evaluacion/config/connection.php";
 session_start();
-include_once("/class/class.crud.php"); 
-include_once("/class/class.calcular.php");
+include_once($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.crud.php"); 
+include_once($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.calcular.php");
 
 if(isset($_POST)){
 	//var_dump($_POST);

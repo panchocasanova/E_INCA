@@ -10,7 +10,8 @@ class buscador{
 	public function evaluaciones_asociadas($rut){
 	  //Busca las evaluaciones que tiene asignada la persona
 	  if(!empty($rut)){
-		  $statment = $this->dbuscador->prepare("SELECT ID_PRUEBA FROM evaluaciones.usuario_prueba WHERE RUT = ? AND PUNTAJE = 0 AND NOTA = 0");
+		  /*la fecha de inicio se compara, ya que es importante para determinar si el usuario ingreso a la evaluacion anteriormente, si por alguna razon ingreso. no podra visualizar nuevamente la prueba. y queda con nota 0.*/
+		  $statment = $this->dbuscador->prepare("SELECT ID_PRUEBA FROM evaluaciones.usuario_prueba WHERE RUT = ? AND PUNTAJE = 0 AND NOTA = 0 AND FECHA_INICIO = '1800-01-01 00:00:00'");
 		  $statment->bindParam(1,$rut);
 		  $statment->execute();
 		  if($statment->rowCount () > 0){

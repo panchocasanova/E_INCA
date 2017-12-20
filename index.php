@@ -20,7 +20,7 @@ if(isset($_POST['ingresar'])){
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>Instituto de Neurocirugia</title>
-	<link rel="shortcut icon" href="/img/logo.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="img/logo.ico" type="image/x-icon" />
 
     <!-- Bootstrap -->
     <link href="vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -31,7 +31,7 @@ if(isset($_POST['ingresar'])){
     <!-- Animate.css -->
     <link href="vendors/animate.css/animate.min.css" rel="stylesheet">    
   </head>
-  <body>
+  <body >
 	<div class="container">
 		<div class="row">
 			<div class="col-md-6 col-md-offset-3">
@@ -71,7 +71,7 @@ if(isset($_POST['ingresar'])){
     <!-- Bootstrap -->
     <script src="vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script type="text/javascript">
-	  $(document).ready(function() {		
+	  $(document).ready(function() {			
 		$('.soloRut').keyup(function (){
 		 this.value = (this.value + '').replace(/[^0-9Kk]/g, '');
 	   });

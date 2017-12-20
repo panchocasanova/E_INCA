@@ -52,7 +52,7 @@ if(isset($_POST['comenzar_ev_name'])){
 		</div>
 		<div class="col-md-8 col-md-offset-2">
 			<div class="jumbotron">			  
-			  <p align="justify">Le damos la cordial bienvenida a la plataforma de evaluacion de profesionales. Porfavor, seleccione la evaluaci&oacute;n que desea completar, recuerde seguir las instrucciones.</p>			  
+			  <p align="justify">Bienvenida a la plataforma de evaluaci&oacute;n de profesionales. Por favor, seleccione la evaluaci&oacute;n que desea completar, recuerde seguir las instrucciones.</p>			  
 			</div>
 		</div>
 		<br>
