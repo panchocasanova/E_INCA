@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/Santiago');
 include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.search.php");
 include_once ($_SERVER["DOCUMENT_ROOT"]."/evaluacion/class/class.functions.php");
 //include_once ("/class/class.search.php");
