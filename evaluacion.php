@@ -429,7 +429,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 						Hora: nowInicio						
 						}, function(data){
 						  if(data != 'OK'){
-							  console.log(data);
+							  //console.log(data);
 						  }else{
 							  timeNext1 = 1;
 						  }					  
@@ -503,7 +503,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 								Pmax: <?php echo $puntajeMaximo;?>,
 								Nexi: <?php echo $nivelPrueba;?>
 								}, function(data){
-								  //console.log(data);
+								  console.log(data);
 								  if(data == 'OK'){
 									  window.location.href = "nota.php";
 								  }		  

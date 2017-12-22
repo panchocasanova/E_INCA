@@ -8,17 +8,16 @@ class calculo{
 	}
 	public function puntajeTotal($rut, $idPrueba){
 		$total = 0;
-		$statment = $this->db->prepare("SELECT pregunta.ID_PRUEBA, pregunta.ID, pregunta.PUNTAJE, respuesta_pregunta.ID_RESPUESTA, respuesta.VALOR 
-										FROM pregunta, respuesta_pregunta, respuesta WHERE pregunta.ID_prueba = ? AND pregunta.ID = respuesta_pregunta.ID_PREGUNTA AND respuesta_pregunta.ID_RESPUESTA = respuesta.ID");
+		$statment = $this->db->prepare("SELECT pregunta.ID_PRUEBA, pregunta.ID, pregunta.PREGUNTA, pregunta.PUNTAJE, respuesta_pregunta.ID_RESPUESTA, respuesta.VALOR FROM pregunta, respuesta_pregunta, respuesta WHERE pregunta.ID_prueba = ? AND pregunta.ID = respuesta_pregunta.ID_PREGUNTA AND respuesta_pregunta.ID_RESPUESTA = respuesta.ID");
 		$statment->bindParam(1, $idPrueba);
 		$statment->execute();
 		if($statment->rowCount()>0){
-			$preguntas = $statment->fetchAll(PDO::FETCH_ASSOC);
-			
+			$preguntas = $statment->fetchAll(PDO::FETCH_ASSOC);			
 			$_SESSION['preguntas'] = $preguntas;
 			//recorro cada pregunta de la prueba que dio la persona
 			foreach ($preguntas as $pregunta){
 				$idPregunta = $pregunta['ID'];
+				$preguntadescripcion = $pregunta['PREGUNTA'];
 				$puntajePregunta = $pregunta['PUNTAJE'];
 				$idRespuesta = $pregunta['ID_RESPUESTA'];
 				$respuestaCorrecta = $pregunta['VALOR'];
@@ -31,6 +30,7 @@ class calculo{
 					$statmentUser->execute();
 					if($statmentUser->rowCount() > 0){
 						$respuestas = $statmentUser->fetchAll(PDO::FETCH_ASSOC);
+						$x=0;
 						foreach($respuestas as $respuesta){
 							$idPreguser = $respuesta['ID_PREGUNTA']; 
 							$idRespuser = $respuesta['ID_RESPUESTA'];
@@ -41,6 +41,9 @@ class calculo{
 									if($idRespuesta == $idRespuser ){
 										$total+= $puntajePregunta;
 										//var_dump($idRespuser);
+									}else{
+										//Si respondio mal, la registro en un array
+										$erronea[] = array("Id" => $idPregunta, "Pregunta" => $preguntadescripcion);
 									}
 								}
 							}
@@ -49,17 +52,22 @@ class calculo{
 									if($idRespuesta == $idRespuser ){
 										if($respuestaCorrecta == $respuestaVOF){
 											$total+=$puntajePregunta;
+										}else{
+											//Si respondio mal, la registro en un array
+											$erronea[] = array("Id"=>$idPregunta, "Pregunta"=>$preguntadescripcion);
 										}
 									
 									}
 								}
 							}	
-							
+							$x++;
 						}
 					}
 				}
 			}
 			//$_SESSION['TOTAL'] = $total;
+			//var_dump($erronea);
+			$_SESSION['erroneas'] = $erronea;
 			return $total;
 		}
 	}

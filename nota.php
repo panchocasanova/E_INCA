@@ -4,6 +4,18 @@ session_start();
 if(!empty($_SESSION) || !isset($_SESSION)){
 	//var_dump($_SESSION);
 	//var_dump($_SESSION['EstadoPuntaje']);
+	//var_dump($_SESSION['erroneas']);
+	$respuestasErroneas = $_SESSION['erroneas'];
+	$aux = 0;
+	foreach($respuestasErroneas as $erronea){
+		//echo $erronea;
+		if($aux != $erronea['Id']){
+			//echo "Valor aux: ".$aux." Valor id:".$erronea['Id'];
+			echo $erronea['Id']." ".$erronea['Pregunta']."<br>";	
+		}
+		$aux = $erronea["Id"];		
+	}
+	
 	$rut = $_SESSION['userRut'];
 	$nombre= $_SESSION['userName'];
 	$paterno = $_SESSION['userPaterno'];
@@ -19,7 +31,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 		$nivelPrueba = $evaluacion['EXIGENCIA'];
 		$descPrueba = $evaluacion['DESCRIPCION'];	
 	}
-	session_destroy();
+	//session_destroy();
 }else{
 	header("Location:index.php");
 }	
