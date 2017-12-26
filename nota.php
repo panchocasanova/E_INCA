@@ -6,15 +6,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 	//var_dump($_SESSION['EstadoPuntaje']);
 	//var_dump($_SESSION['erroneas']);
 	$respuestasErroneas = $_SESSION['erroneas'];
-	$aux = 0;
-	foreach($respuestasErroneas as $erronea){
-		//echo $erronea;
-		if($aux != $erronea['Id']){
-			//echo "Valor aux: ".$aux." Valor id:".$erronea['Id'];
-			echo $erronea['Id']." ".$erronea['Pregunta']."<br>";	
-		}
-		$aux = $erronea["Id"];		
-	}
+	$aux = 0;	
 	
 	$rut = $_SESSION['userRut'];
 	$nombre= $_SESSION['userName'];
@@ -31,7 +23,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 		$nivelPrueba = $evaluacion['EXIGENCIA'];
 		$descPrueba = $evaluacion['DESCRIPCION'];	
 	}
-	//session_destroy();
+	//session_destroy(); //comentar solo para pruebas
 }else{
 	header("Location:index.php");
 }	
@@ -58,7 +50,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
   <body>
   <div class="container">
 	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-8 col-md-offset-2 col-xs-12">
 		<div class="page-header">
 		  <center><h1>NOTA FINAL<small></small></h1></center>
 		</div>
@@ -93,8 +85,31 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 			</div>
 		</div>
 	</div>
+	<?php if($respuestasErroneas != 0 ){ ?>
 	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
+		<div class="col-md-8 col-md-offset-2 col-xs-12">
+			<div class="panel panel-danger">
+			  <div class="panel-heading">Respuestas erroneas</div>
+			  <div class="panel-body">
+			  <?php 
+					if($respuestasErroneas != 0 ){
+						foreach($respuestasErroneas as $erronea){							
+							if($aux != $erronea['Id']){
+								//echo "Valor aux: ".$aux." Valor id:".$erronea['Id'];
+								 echo '<div class="alert alert-danger" role="alert">'.$erronea['Pregunta'].'</div>';	
+							}
+							$aux = $erronea["Id"];		
+						}
+					}
+			  ?>
+				
+			  </div>
+			</div>
+		</div>
+	</div>
+	<?php } ?>
+	<div class="row">
+		<div class="col-md-8 col-md-offset-2 col-xs-12">
 			<button class="btn btn-warning btn-block" onclick="window.print();">Imprimir</button>
 			<button class="btn btn-primary btn-block" id="salir">SALIR</button>
 		</div>

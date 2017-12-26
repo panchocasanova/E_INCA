@@ -20,6 +20,8 @@ if(!isset($_GET['idp'])){
 	$totalUsuarios = $buscar->userAll($idPrueba);
 	$instrucciones = $buscar->instruccion_evaluacion($idPrueba);
 	$listadoTerminadas = $buscar->listadoTerminadas($idPrueba);
+	$listadoCurso = $buscar->listadoCurso($idPrueba);
+	$listadoFaltantes = $buscar->listadoFaltantes($idPrueba);
 	//var_dump($listadoTerminadas);
 	if($datosPrueba == 0){
 		header("Location: administrador.php");
@@ -66,6 +68,7 @@ if(!isset($_GET['idp'])){
     <link href="vendors/datatables.net-scroller-bs/css/scroller.bootstrap.min.css" rel="stylesheet">
     <!-- Custom Theme Style -->
     <link href="build/css/custom.min.css" rel="stylesheet">
+	
   </head>
 
   <body class="nav-md">
@@ -315,8 +318,25 @@ if(!isset($_GET['idp'])){
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
-                      <p align="justify">escribir aca </p>
+                  <div class="x_content">                      
+					  <table id="cursoCompleto" class="table table-striped table-bordered">
+						<thead>
+                        <tr>
+                          <th>Rut</th>
+                          <th>Nombre</th>
+                          <th>Cargo</th>						  
+                        </tr>
+                      </thead>
+					  <tbody>
+							<?php foreach($listadoCurso as $listado){ ?>
+								<tr>
+									<td><?php echo $listado['RUT'];?></td>
+									<td><?php echo $listado['NOMBRE']." ".$listado['PATERNO']." ".$listado['MATERNO'];?></td>
+									<td><?php echo $listado['CARGO'];?></td>
+								</tr>
+							<?php } ?>
+					  </tbody>
+					  </table>
                   </div>
                 </div>
               </div>
@@ -334,33 +354,30 @@ if(!isset($_GET['idp'])){
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
-                      <p align="justify">escribir aca </p>
+                  <div class="x_content">                      
 					  <table id="terminadas" class="table table-striped table-bordered">
 						<thead>
                         <tr>
                           <th>Rut</th>
                           <th>Nombre</th>
-                          <th>Cargo</th>
-                          <th>Inicio</th>
-                          <th>Termino</th>
+                          <th>Cargo</th>                          
                           <th>Puntaje</th>
 						  <th>Nota Final</th>
                         </tr>
                       </thead>
+					  <?php if($listadoTerminadas != 0){?>
 					  <tbody>
 							<?php foreach($listadoTerminadas as $listado){ ?>
 								<tr>
 									<td><?php echo $listado['RUT'];?></td>
 									<td><?php echo $listado['NOMBRE']." ".$listado['PATERNO']." ".$listado['MATERNO'];?></td>
-									<td><?php echo $listado['CARGO'];?></td>
-									<td><?php echo $listado['FECHA_INICIO'];?></td>
-									<td><?php echo $listado['FECHA_TERMINO'];?></td>
+									<td><?php echo $listado['CARGO'];?></td>									
 									<td><?php echo $listado['PUNTAJE'];?></td>
 									<td><?php echo number_format($listado['NOTA'],1);?></td>
 								</tr>
 							<?php } ?>
 					  </tbody>
+					  <?php } ?>
 					  </table>
                   </div>
                 </div>
@@ -379,8 +396,31 @@ if(!isset($_GET['idp'])){
                     </ul>
                     <div class="clearfix"></div>
                   </div>
-                  <div class="x_content">
-                      <p align="justify">escribir aca </p>
+                  <div class="x_content">                      
+					  <table id="cursoFaltantes" class="table table-striped table-bordered">
+						<thead>
+                        <tr>
+                          <th>Rut</th>
+                          <th>Nombre</th>
+                          <th>Cargo</th>                          
+                          <th>Puntaje</th>
+						  <th>Nota Final</th>
+                        </tr>
+                      </thead>
+					  <?php if($listadoFaltantes != 0){?>
+					  <tbody>
+							<?php foreach($listadoFaltantes as $listado){ ?>
+								<tr>
+									<td><?php echo $listado['RUT'];?></td>
+									<td><?php echo $listado['NOMBRE']." ".$listado['PATERNO']." ".$listado['MATERNO'];?></td>
+									<td><?php echo $listado['CARGO'];?></td>									
+									<td><?php echo $listado['PUNTAJE'];?></td>
+									<td><?php echo number_format($listado['NOTA'],1);?></td>
+								</tr>
+							<?php } ?>
+					  </tbody>
+					  <?php } ?>
+					  </table>
                   </div>
                 </div>
               </div>
@@ -429,6 +469,29 @@ if(!isset($_GET['idp'])){
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#terminadas').dataTable( {
+				dom: 'Bfrtip',
+				buttons: [
+					'copy', 'csv', 'excel', 'pdf', 'print'
+				],
+				"language": {
+					"url": "vendors/datatables.net/js/datatables.spanish.lang"
+				},				
+				
+			} );
+			$('#cursoCompleto').dataTable( {
+				dom: 'Bfrtip',
+				buttons: [
+					'copy', 'csv', 'excel', 'pdf', 'print'
+				],
+				"language": {
+					"url": "vendors/datatables.net/js/datatables.spanish.lang"
+				}
+			} );
+			$('#cursoFaltantes').dataTable( {
+				dom: 'Bfrtip',
+				buttons: [
+					'copy', 'csv', 'excel', 'pdf', 'print'
+				],
 				"language": {
 					"url": "vendors/datatables.net/js/datatables.spanish.lang"
 				}

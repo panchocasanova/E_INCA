@@ -67,6 +67,7 @@ class calculo{
 			}
 			//$_SESSION['TOTAL'] = $total;
 			//var_dump($erronea);
+			if(!isset($erronea)) $erronea = 0; // si el usuario respondio todas las preguntas correctamente $erronea vale cero.
 			$_SESSION['erroneas'] = $erronea;
 			return $total;
 		}

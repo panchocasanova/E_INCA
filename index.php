@@ -8,6 +8,7 @@ if(isset($_POST['ingresar'])){
   $obj = new user();
   $respuesta = $obj->login($rut,$password);
   //echo $respuesta;
+  
 }
 ?>
 <!DOCTYPE html>

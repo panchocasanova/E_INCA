@@ -60,7 +60,7 @@ if(isset($_POST['login'])){
             <form name="logAdmin" method="POST">				
               <h4>INGRESO ADMINISTRADOR</h4>			  
               <div>
-                <input type="text" class="form-control soloRut" placeholder="Username" required="" name="id">
+                <input type="text" class="form-control " placeholder="Username" required="" name="id">
               </div>
               <div>
                 <input type="password" class="form-control" placeholder="Password" required="" name="pass">

@@ -417,10 +417,8 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 			var nowInicio;
 			var horaInicio;
 			$(".buttonNext").click(function(){
-				if(timeNext1 == 0){
-									
-					horaInicio = moment(date.getHours()+":"+date.getMinutes(),'HH:mm');
-					
+				if(timeNext1 == 0){									
+					horaInicio = moment(date.getHours()+":"+date.getMinutes(),'HH:mm');						
 					nowInicio = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 					$.post("switch.php",{
 						Action: "TIEMPOINICIO",
@@ -444,7 +442,8 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 				return false;
 			});
 			var nowFin;
-			$("#btnFinalizar").click(function(){				
+			$("#btnFinalizar").click(function(){
+				var date = new Date();
 				nowFin = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + " " + date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
 				//guardar puntaje.
 				//console.log(now);
@@ -456,7 +455,7 @@ if(!empty($_SESSION) || !isset($_SESSION)){
 					Pmax: <?php echo $puntajeMaximo;?>,
 					Nexi: <?php echo $nivelPrueba;?>
 					}, function(data){
-					  //console.log(data);
+					  console.log(data);
 					  if(data == 'OK'){
 						  window.location.href = "nota.php";
 					  }		  
