@@ -6,7 +6,19 @@ class buscador{
 	public function buscador(){
 		$this->dbuscador = new conexionPDO();
 		$this->dbuscador = $this->dbuscador->conexionPDO();
-	}  
+	}
+	public function datosUsuario($rut){
+		$statment = $this->dbuscador->prepare("SELECT * FROM usuario WHERE RUT = ?");
+		$statment->bindParam(1, $rut);
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	
 	public function evaluaciones_asociadas($rut){
 	  //Busca las evaluaciones que tiene asignada la persona
 	  if(!empty($rut)){
@@ -182,6 +194,17 @@ class buscador{
 		$statment = $this->dbuscador->prepare("SELECT usuario.RUT, usuario.NOMBRE, usuario.PATERNO, usuario.MATERNO, usuario.CARGO, usuario_prueba.FECHA_INICIO, usuario_prueba.FECHA_TERMINO, usuario_prueba.PUNTAJE, usuario_prueba.NOTA FROM usuario, usuario_prueba WHERE usuario.RUT=usuario_prueba.RUT AND usuario_prueba.ID_PRUEBA = ? AND usuario_prueba.NOTA = ?;");
 		$statment->bindParam(1,$idPrueba);
 		$statment->bindValue(2,0);
+		$statment->execute();
+		if($statment->rowCount() > 0){
+			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);
+			return $datos;
+		}else{
+			return 0;
+		}
+	}
+	public function detalleRespuesta($id){
+		$statment = $this->dbuscador->prepare("SELECT * FROM respuesta WHERE ID = ?");
+		$statment->bindParam(1, $id);
 		$statment->execute();
 		if($statment->rowCount() > 0){
 			$datos = $statment->fetchAll(PDO::FETCH_ASSOC);

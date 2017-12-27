@@ -8,7 +8,7 @@ class calculo{
 	}
 	public function puntajeTotal($rut, $idPrueba){
 		$total = 0;
-		$statment = $this->db->prepare("SELECT pregunta.ID_PRUEBA, pregunta.ID, pregunta.PREGUNTA, pregunta.PUNTAJE, respuesta_pregunta.ID_RESPUESTA, respuesta.VALOR FROM pregunta, respuesta_pregunta, respuesta WHERE pregunta.ID_prueba = ? AND pregunta.ID = respuesta_pregunta.ID_PREGUNTA AND respuesta_pregunta.ID_RESPUESTA = respuesta.ID");
+		$statment = $this->db->prepare("SELECT pregunta.ID_PRUEBA, pregunta.ID, pregunta.PREGUNTA, pregunta.PUNTAJE, respuesta_pregunta.ID_RESPUESTA, respuesta.RESPUESTA, respuesta.VALOR FROM pregunta, respuesta_pregunta, respuesta WHERE pregunta.ID_prueba = ? AND pregunta.ID = respuesta_pregunta.ID_PREGUNTA AND respuesta_pregunta.ID_RESPUESTA = respuesta.ID");
 		$statment->bindParam(1, $idPrueba);
 		$statment->execute();
 		if($statment->rowCount()>0){
@@ -20,6 +20,7 @@ class calculo{
 				$preguntadescripcion = $pregunta['PREGUNTA'];
 				$puntajePregunta = $pregunta['PUNTAJE'];
 				$idRespuesta = $pregunta['ID_RESPUESTA'];
+				$descRespuestaCorrecta = $pregunta['RESPUESTA'];
 				$respuestaCorrecta = $pregunta['VALOR'];
 				
 				//si la respuesta de las alternativas es correcta.
@@ -43,7 +44,7 @@ class calculo{
 										//var_dump($idRespuser);
 									}else{
 										//Si respondio mal, la registro en un array
-										$erronea[] = array("Id" => $idPregunta, "Pregunta" => $preguntadescripcion);
+										$erronea[] = array("Id" => $idPregunta, "Pregunta" => $preguntadescripcion, "idRespuestaCorrecta" => $idRespuesta, "descRespuestaCorrecta"=>$descRespuestaCorrecta, "idRespuestaUser" => $idRespuser);
 									}
 								}
 							}
@@ -54,7 +55,8 @@ class calculo{
 											$total+=$puntajePregunta;
 										}else{
 											//Si respondio mal, la registro en un array
-											$erronea[] = array("Id"=>$idPregunta, "Pregunta"=>$preguntadescripcion);
+											//$erronea[] = array("Id"=>$idPregunta, "Pregunta"=>$preguntadescripcion);
+											$erronea[] = array("Id" => $idPregunta, "Pregunta" => $preguntadescripcion, "idRespuestaCorrecta" => $idRespuesta, "descRespuestaCorrecta"=>$descRespuestaCorrecta, "idRespuestaUser" => $idRespuser, "VOFUser" => $respuestaVOF, "VOFCorrecta" => $respuestaCorrecta);
 										}
 									
 									}

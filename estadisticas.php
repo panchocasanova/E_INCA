@@ -312,9 +312,8 @@ if(!isset($_GET['idp'])){
                     <h2>Listado total de Alumnos</h2>
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                      </li>                      
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
+                      </li>                     
+                      
                     </ul>
                     <div class="clearfix"></div>
                   </div>
@@ -349,8 +348,7 @@ if(!isset($_GET['idp'])){
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>                      
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
+                      
                     </ul>
                     <div class="clearfix"></div>
                   </div>
@@ -369,8 +367,8 @@ if(!isset($_GET['idp'])){
 					  <tbody>
 							<?php foreach($listadoTerminadas as $listado){ ?>
 								<tr>
-									<td><?php echo $listado['RUT'];?></td>
-									<td><?php echo $listado['NOMBRE']." ".$listado['PATERNO']." ".$listado['MATERNO'];?></td>
+									<td><a href="detalle.php?rut=<?php echo $listado['RUT'];?>&id=<?php echo $idPrueba;?>"><?php echo $listado['RUT'];?></a></td>
+									<td><a href="detalle.php?rut=<?php echo $listado['RUT'];?>&id=<?php echo $idPrueba;?>"><?php echo $listado['NOMBRE']." ".$listado['PATERNO']." ".$listado['MATERNO'];?></a></td>
 									<td><?php echo $listado['CARGO'];?></td>									
 									<td><?php echo $listado['PUNTAJE'];?></td>
 									<td><?php echo number_format($listado['NOTA'],1);?></td>
@@ -391,8 +389,7 @@ if(!isset($_GET['idp'])){
                     <ul class="nav navbar-right panel_toolbox">
                       <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                       </li>                      
-                      <li><a class="close-link"><i class="fa fa-close"></i></a>
-                      </li>
+                      
                     </ul>
                     <div class="clearfix"></div>
                   </div>
@@ -481,7 +478,7 @@ if(!isset($_GET['idp'])){
 			$('#cursoCompleto').dataTable( {
 				dom: 'Bfrtip',
 				buttons: [
-					'copy', 'csv', 'excel', 'pdf', 'print'
+					'copy', 'csv', 'print'
 				],
 				"language": {
 					"url": "vendors/datatables.net/js/datatables.spanish.lang"
