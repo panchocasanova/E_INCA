@@ -48,7 +48,6 @@ if(!empty($_GET)){
     <link href="vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <!-- NProgress -->
     <link href="vendors/nprogress/nprogress.css" rel="stylesheet">
-
     <!-- Custom Theme Style -->
     <link href="build/css/custom.min.css" rel="stylesheet">
   </head>
@@ -200,8 +199,7 @@ if(!empty($_GET)){
 									
 									
 									if($idPregunta != $aux){									
-										$aux = $idPregunta;
-										
+										$aux = $idPregunta;										
 									}
 									
 									echo "<br>";
